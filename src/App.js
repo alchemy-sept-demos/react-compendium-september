@@ -8,17 +8,27 @@ function App() {
   const [pokemon, setPokemon] = useState([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
+  const [order, setOrder] = useState('asc');
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getPokemon(query);
+      const data = await getPokemon(query, order);
       setPokemon(data.results);
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
     };
+    // because loading is in the dependency array
+    // this useEffect will be called whenever loading changes
+    // we only want to load new data when loading is true though
+    // so we wrap the call to fetchData in a conditional
     if (loading) {
       fetchData();
     }
-  }, [loading]);
+    // react requires query also be in the dependency array
+    // whenever loading or query change, react will call the callback
+    // but will only fetch the data when loading is true
+  }, [loading, query, order]);
 
   return (
     <div className="App">
@@ -26,7 +36,13 @@ function App() {
       {loading && <span className="loader"></span>}
       {!loading && (
         <>
-          <Controls query={query} setQuery={setQuery} setLoading={setLoading} />
+          <Controls
+            query={query}
+            setQuery={setQuery}
+            setLoading={setLoading}
+            order={order}
+            setOrder={setOrder}
+          />
           <PokeList pokemon={pokemon} />
         </>
       )}

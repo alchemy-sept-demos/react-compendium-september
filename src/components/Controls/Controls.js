@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Controls({ query, setQuery, setLoading }) {
+export default function Controls({ query, setQuery, setLoading, order, setOrder }) {
   return (
     <div>
       <input
@@ -11,7 +11,11 @@ export default function Controls({ query, setQuery, setLoading }) {
           setQuery(e.target.value);
         }}
       />
-      <button onClick={(e) => setLoading(true)}>Search</button>
+      <select value={order} onChange={(e) => setOrder(e.target.value)}>
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+      </select>
+      <button onClick={() => setLoading(true)}>Search</button>
     </div>
   );
 }
