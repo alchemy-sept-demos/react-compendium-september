@@ -12,7 +12,6 @@ function App() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    let timer;
     const fetchData = async () => {
       const data = await getPokemon(query, order, currentPage);
       setPokemon(data.results);

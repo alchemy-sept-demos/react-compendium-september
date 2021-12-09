@@ -1,21 +1,29 @@
 import React from 'react';
+// import Button from '@mui/material/Button';
+// import TextField from '@mui/material/TextField';
+// import Select from '@mui/material/Select';
+import { Button, TextField, Select, MenuItem } from '@mui/material';
 
 export default function Controls({ query, setQuery, setLoading, order, setOrder }) {
   return (
     <div>
-      <input
+      <TextField
         type="text"
-        placeholder="Search Pokemon"
+        variant="outlined"
+        label="Search Pokemon"
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);
         }}
       />
-      <select value={order} onChange={(e) => setOrder(e.target.value)}>
-        <option value="asc">Ascending</option>
-        <option value="desc">Descending</option>
-      </select>
-      <button onClick={() => setLoading(true)}>Search</button>
+      <Select value={order} onChange={(e) => setOrder(e.target.value)}>
+        <MenuItem value="asc">Ascending</MenuItem>
+        <MenuItem value="desc">Descending</MenuItem>
+      </Select>
+      <Button variant="contained" onClick={() => setLoading(true)}>
+        Search
+      </Button>
+      {/* <button onClick={() => setLoading(true)}>Search</button> */}
     </div>
   );
 }
