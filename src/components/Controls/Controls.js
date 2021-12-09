@@ -4,7 +4,16 @@ import React from 'react';
 // import Select from '@mui/material/Select';
 import { Button, TextField, Select, MenuItem } from '@mui/material';
 
-export default function Controls({ query, setQuery, setLoading, order, setOrder }) {
+export default function Controls({
+  query,
+  setQuery,
+  setLoading,
+  order,
+  setOrder,
+  selectedType,
+  setSelectedType,
+  types,
+}) {
   return (
     <div>
       <TextField
@@ -19,6 +28,14 @@ export default function Controls({ query, setQuery, setLoading, order, setOrder 
       <Select value={order} onChange={(e) => setOrder(e.target.value)}>
         <MenuItem value="asc">Ascending</MenuItem>
         <MenuItem value="desc">Descending</MenuItem>
+      </Select>
+      <Select value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
+        <MenuItem value="all">All</MenuItem>
+        {types.map((type) => (
+          <MenuItem key={type} value={type}>
+            {type}
+          </MenuItem>
+        ))}
       </Select>
       <Button variant="contained" onClick={() => setLoading(true)}>
         Search

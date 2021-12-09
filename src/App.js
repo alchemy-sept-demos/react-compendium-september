@@ -1,11 +1,13 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { getPokemon } from './services/pokemon';
+import { getPokemon, getTypes } from './services/pokemon';
 import PokeList from './components/PokeList/PokeList';
 import Controls from './components/Controls/Controls';
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
+  const [types, setTypes] = useState([]);
+  const [selectedType, setSelectedType] = useState('all');
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState('asc');
@@ -13,7 +15,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getPokemon(query, order, currentPage);
+      const data = await getPokemon(query, order, currentPage, selectedType);
       setPokemon(data.results);
       setLoading(false);
     };
@@ -29,6 +31,14 @@ function App() {
     // but will only fetch the data when loading is true
   }, [loading, query, order, currentPage]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTypes();
+      setTypes(data);
+    };
+    fetchData();
+  }, []);
+
   return (
     <div className="App">
       <h1>Pokedex</h1>
@@ -38,6 +48,9 @@ function App() {
         setLoading={setLoading}
         order={order}
         setOrder={setOrder}
+        types={types}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
       />
       {loading && <span className="loader"></span>}
       {!loading && (
