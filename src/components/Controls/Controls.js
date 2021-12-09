@@ -4,7 +4,15 @@ import React from 'react';
 // import Select from '@mui/material/Select';
 import { Button, TextField, Select, MenuItem } from '@mui/material';
 
-export default function Controls({ query, setQuery, setLoading, order, setOrder }) {
+export default function Controls({
+  setQuery,
+  query,
+  order,
+  setLoading,
+  setOrder,
+  perPage,
+  setPerPage,
+}) {
   return (
     <div>
       <TextField
@@ -19,6 +27,11 @@ export default function Controls({ query, setQuery, setLoading, order, setOrder 
       <Select value={order} onChange={(e) => setOrder(e.target.value)}>
         <MenuItem value="asc">Ascending</MenuItem>
         <MenuItem value="desc">Descending</MenuItem>
+      </Select>
+      <Select value={perPage} onChange={(e) => setPerPage(e.target.value)}>
+        <MenuItem value="25">25</MenuItem>
+        <MenuItem value="50">50</MenuItem>
+        <MenuItem value="100">100</MenuItem>
       </Select>
       <Button variant="contained" onClick={() => setLoading(true)}>
         Search

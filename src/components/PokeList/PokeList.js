@@ -1,17 +1,12 @@
 import React from 'react';
+import './PokeList.css';
 
 export default function PokeList({ pokemon, currentPage, setCurrentPage, setLoading }) {
-  const handleNextPage = () => {
-    setCurrentPage((prevState) => ++prevState);
-    setLoading(true);
-  };
   return (
-    <div>
+    <div className="poke-list">
       {pokemon.map((poke) => (
         <p key={poke.id}>{poke.pokemon}</p>
       ))}
-      <div style={{ color: 'black', fontWeight: 'bold' }}>Page: {currentPage}</div>
-      <button onClick={handleNextPage}>Next Page</button>
     </div>
   );
 }
