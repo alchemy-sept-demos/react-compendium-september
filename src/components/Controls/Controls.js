@@ -8,11 +8,16 @@ export default function Controls({
   setQuery,
   query,
   order,
-  setLoading,
   setOrder,
   perPage,
   setPerPage,
+  setLoadFirstPage,
+  setCurrentPage,
 }) {
+  const handleClick = () => {
+    setCurrentPage(1);
+    setLoadFirstPage(true);
+  };
   return (
     <div>
       <TextField
@@ -33,7 +38,7 @@ export default function Controls({
         <MenuItem value="50">50</MenuItem>
         <MenuItem value="100">100</MenuItem>
       </Select>
-      <Button variant="contained" onClick={() => setLoading(true)}>
+      <Button variant="contained" onClick={handleClick}>
         Search
       </Button>
       {/* <button onClick={() => setLoading(true)}>Search</button> */}

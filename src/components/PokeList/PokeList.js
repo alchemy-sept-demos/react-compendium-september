@@ -1,7 +1,7 @@
 import React from 'react';
 import './PokeList.css';
 
-export default function PokeList({ pokemon, currentPage, setCurrentPage, setLoading }) {
+export default function PokeList({ pokemon }) {
   return (
     <div className="poke-list">
       {pokemon.map((poke) => (

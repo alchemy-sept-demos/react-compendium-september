@@ -7,38 +7,52 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 
 function App() {
   const [pokemon, setPokemon] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [query, setQuery] = useState('');
   const [order, setOrder] = useState('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(25);
-
-  const fetchMoreData = async () => {
-    console.log('inside fetch more data');
-    // fetch the next page of results
-    const data = await getPokemon(query, order, perPage, currentPage + 1);
-    setPokemon((prevState) => [...prevState, ...data.results]);
-    setCurrentPage((prevState) => ++prevState);
-    // append them to the list of pokemon
-  };
+  const [count, setCount] = useState(0);
+  const [url, setUrl] = useState('');
+  const [loadMore, setLoadMore] = useState(false);
+  const [loadFirstPage, setLoadFirstPage] = useState(true);
 
   useEffect(() => {
+    console.log('in first useEffect');
+    const params = new URLSearchParams();
+    params.set('pokemon', query);
+    // for now, I ONLY want to sort by the pokemon key (which holds the name)
+    // if i wanted to sort by something else, you can adjust that here
+    params.set('sort', 'pokemon');
+    params.set('direction', order);
+
+    params.set('perPage', perPage);
+
+    // set the page
+    params.set('page', currentPage);
+    setUrl(`https://pokedex-alchemy.herokuapp.com/api/pokedex?${params.toString()}`);
+  }, [query, order, perPage, currentPage]);
+
+  useEffect(() => {
+    console.log('in second use effect');
+    console.log('loadMore', loadMore);
+    console.log('loadFirst', loadFirstPage);
     const fetchData = async () => {
-      const data = await getPokemon(query, order, perPage, currentPage);
-      setPokemon(data.results);
+      const data = await getPokemon(url);
+      setCount(data.count);
+      if (loadMore) {
+        setPokemon((prevData) => [...prevData, ...data.results]);
+        setLoadMore(false);
+      } else {
+        setPokemon(data.results);
+        setLoadFirstPage(false);
+      }
       setLoading(false);
     };
-    // because loading is in the dependency array
-    // this useEffect will be called whenever loading changes
-    // we only want to load new data when loading is true though
-    // so we wrap the call to fetchData in a conditional
-    if (loading) {
+    if (loadMore || loadFirstPage) {
       fetchData();
     }
-    // react requires query also be in the dependency array
-    // whenever loading or query change, react will call the callback
-    // but will only fetch the data when loading is true
-  }, [loading, query, order, currentPage, perPage]);
+  }, [url, loadFirstPage, loadMore]);
 
   return (
     <div className="App">
@@ -51,13 +65,18 @@ function App() {
         setOrder={setOrder}
         perPage={perPage}
         setPerPage={setPerPage}
+        setCurrentPage={setCurrentPage}
+        setLoadFirstPage={setLoadFirstPage}
       />
-      {loading && <span className="loader"></span>}
-      {!loading && (
+      {loadFirstPage && <span className="loader"></span>}
+      {!loadFirstPage && (
         <InfiniteScroll
           dataLength={pokemon.length} //This is important field to render the next data
-          next={fetchMoreData}
-          hasMore={true}
+          next={() => {
+            setCurrentPage((prevPage) => ++prevPage);
+            setLoadMore(true);
+          }}
+          hasMore={Math.ceil(count / perPage) > currentPage}
           loader={<h4>Loading...</h4>}
           endMessage={
             <p style={{ textAlign: 'center' }}>
